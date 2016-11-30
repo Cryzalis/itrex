@@ -1,7 +1,20 @@
 @extends('app')
 
 @section('content')
-
+	<div class="row">
+		@if (count($errors) > 0)
+		    <div class="alert alert-danger">
+		        <ul>
+		            @foreach ($errors->all() as $error)
+		                <li>{{ $error }}</li>
+		            @endforeach
+		        </ul>
+		    </div>
+		@endif
+		@if (Session::has('message'))
+	   		<div class="alert alert-info">{{ Session::get('message') }}</div>
+		@endif
+	</div>
 	@foreach($posts as $post)
 		<ul class="media-list">
 		  <li class="media" style="margin-bottom:5px; border:1px solid #333;border-radius:5px; padding:10px;">

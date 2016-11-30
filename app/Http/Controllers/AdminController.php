@@ -11,7 +11,11 @@ use App\Models\Post;
 
 use Carbon\Carbon;
 
-class AdminController extends Controller
+use File;
+
+use Session;
+
+class AdminController extends MainController
 {
     /**
      * Create a new controller instance.
@@ -22,6 +26,8 @@ class AdminController extends Controller
     {
 
         $this->middleware('admin');
+        $this->imgOriginalPath  = 'uploads/images/original/';
+        $this->imgSmallPath     = 'uploads/images/small/';
     }
 
     /**
@@ -64,8 +70,13 @@ class AdminController extends Controller
     }
 
     public function destroy(Post $postModel, Request $request)
-    {
+    {   
+        $post = Post::find($request->input('id'));
         Post::destroy($request->input('id'));
+        if(File::delete($this->imgOriginalPath.$post->image) AND File::delete($this->imgSmallPath.$post->image)){
+            Session::flash('message', "Image delete: ".$post->image);
+        }
+
         return redirect()->back();
     }
 }

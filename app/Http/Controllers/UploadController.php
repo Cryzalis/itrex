@@ -15,45 +15,39 @@ use Session;
 
 use \Input as Input;
 
-class UploadController extends Controller
+class UploadController extends MainController
 {
-    ///////
+
     public function upload(Post $postModel, Request $request){
 
         $inputs =$request->all();
         $this->validate($request, [
             'title'         => 'required|max:255',
             'description'   => 'required|min:10',
-            'img'           => 'mimes:jpeg,bmp,png,jpg'
+            'img'           => 'mimes:jpeg,bmp,jpg'
         ]);
-        if(isset($inputs['title']) AND isset($inputs['description']) AND isset($inputs['image']) ){
+     
+        if($request->file())
+            {
+                $image = $request->file('image');
+                $filename = str_random(20). '.' . $image->getClientOriginalExtension();
 
-            if($request->file())
-                {
-                    $filename = str_random(20).'.jpg';
-                    $path = base_path().'/uploads/images/original';
-                    $pathsmall = base_path().'/uploads/images/small';
+                //dd($request->file('image')->getRealPath());    
+                if($image->move($this->imgOriginalPath,$filename)){
+                    if(Image::make($this->imgOriginalPath.$filename)->resize(262, 157)->save($this->imgSmallPath.$filename)){
+                        $data['title']          = $inputs['title'];
+                        $data['description']    = $inputs['description'];
+                        $data['image']          =  $filename;
+                        $data['published']      = 0;
+                        
+                        $postModel->addImage($data);
+                        Session::flash('message', "Image uploaded");
+                        
 
-                    $image = $request->file('image');
-                    //dd($request->file('image')->getRealPath());
-                    
-                    if($image->move($path,$filename)){
-                        if(Image::make($path.'/'.$filename)->resize(262, 157)->save('uploads/images/small/'.$filename)){
-                            $data['title']          = $inputs['title'];
-                            $data['description']    = $inputs['description'];
-                            $data['image']          =  $filename;
-                            $data['published']      = 0;
-                            
-                            $postModel->addImage($data);
-                            Session::flash('message', "Image uploaded");
-                            
-
-                            }
-                        }
-                }    
-
-
-        }
+                    }
+                }
+            }
+    
         return redirect()->back();
         }
 }

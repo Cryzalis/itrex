@@ -8,7 +8,7 @@
 			<h3>{{$post->title}}</h3>
 			<div class="col-lg-12">
 				<a href="/postimage/{{$post->id}}">
-			    <img class="img-responsive" src="/uploads/images/small/{{$post->image}}" alt="{{$post->title}}">
+			    <img class="img-responsive" src="/{{$imgSmall}}{{$post->image}}" alt="{{$post->title}}">
 			</a>
 			</div>
 			

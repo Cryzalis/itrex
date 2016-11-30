@@ -12,7 +12,7 @@ use Carbon\Carbon;
 
 use Intervention\Image\ImageManagerStatic as Image;
 
-class PostImageController extends Controller
+class PostImageController extends MainController
 {
     //
 
@@ -22,7 +22,7 @@ class PostImageController extends Controller
        // dd($posts);
         $posts = $postModel->getPublishedPosts();
 
-        return view('post.index',['posts' => $posts]);
+        return view('post.index',['posts' => $posts, 'imgSmall' => $this->imgSmallPath]);
     }
 
     public function create()
@@ -33,7 +33,7 @@ class PostImageController extends Controller
     public function postImage($id){
 
         $post = Post::find($id);
-       return view('post.postimage',['post' => $post]);
+       return view('post.postimage',['post' => $post,'imgOriginal' => $this->imgOriginalPath]);
     }
     
 
