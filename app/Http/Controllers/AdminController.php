@@ -24,10 +24,8 @@ class AdminController extends MainController
      */
     public function __construct()
     {
-
+        parent::__construct();
         $this->middleware('admin');
-        $this->imgOriginalPath  = 'uploads/images/original/';
-        $this->imgSmallPath     = 'uploads/images/small/';
     }
 
     /**
